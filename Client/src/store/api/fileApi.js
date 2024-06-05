@@ -23,8 +23,27 @@ export const fileApi = createApi({
         responseHandler: (response) => response.json(), // Ensure response is parsed as JSON
       }),
     }),
+    getChartData: builder.query({
+      query: () => ({
+        url: '/chart-data',
+        method: 'GET',
+        responseHandler: (response) => response.json(), // Ensure response is parsed as JSON
+      }),
+    }),
+    getSummaryChartData: builder.query({
+      query: () => ({
+        url: '/summary-chart-data',
+        method: 'GET',
+        responseHandler: (response) => response.json(), // Ensure response is parsed as JSON
+      }),
+    }),
   }),
 });
 
-export const { useUploadFileMutation, useGetResultsQuery } = fileApi;
+export const {
+  useUploadFileMutation,
+  useGetResultsQuery,
+  useGetChartDataQuery,
+  useGetSummaryChartDataQuery,
+} = fileApi;
 export default fileApi.reducer;

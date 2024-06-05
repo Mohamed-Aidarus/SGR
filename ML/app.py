@@ -97,6 +97,78 @@ def get_results():
         logging.error(f"Error fetching results: {e}")
         return jsonify(error=str(e)), 500
 
+@app.route('/chart-data', methods=['GET'])
+def get_chart_data():
+    try:
+        pipeline = [
+            {
+                '$group': {
+                    '_id': {
+                        'Department': '$Department',
+                        'Prediction': '$Prediction',
+                        'Gender': '$Gender',
+                        'Mode': '$Mode'
+                    },
+                    'count': {'$sum': 1}
+                }
+            },
+            {
+                '$group': {
+                    '_id': '$_id.Department',
+                    'predictions': {
+                        '$push': {
+                            'Prediction': '$_id.Prediction',
+                            'Gender': '$_id.Gender',
+                            'Mode': '$_id.Mode',
+                            'count': '$count'
+                        }
+                    },
+                    'total': {'$sum': '$count'}
+                }
+            }
+        ]
+        chart_data = list(predictions_collection.aggregate(pipeline))
+        logging.info(f"Chart data fetched: {chart_data}")
+        return jsonify(chart_data=chart_data), 200
+    except Exception as e:
+        logging.error(f"Error fetching chart data: {e}")
+        return jsonify(error=str(e)), 500
+
+@app.route('/summary-chart-data', methods=['GET'])
+def get_summary_chart_data():
+    try:
+        pipeline = [
+            {
+                '$group': {
+                    '_id': {
+                        'Prediction': '$Prediction',
+                        'Gender': '$Gender',
+                        'Mode': '$Mode'
+                    },
+                    'count': {'$sum': 1}
+                }
+            },
+            {
+                '$group': {
+                    '_id': '$_id.Prediction',
+                    'genders': {
+                        '$push': {
+                            'Gender': '$_id.Gender',
+                            'Mode': '$_id.Mode',
+                            'count': '$count'
+                        }
+                    },
+                    'total': {'$sum': '$count'}
+                }
+            }
+        ]
+        summary_data = list(predictions_collection.aggregate(pipeline))
+        logging.info(f"Summary chart data fetched: {summary_data}")
+        return jsonify(summary_data=summary_data), 200
+    except Exception as e:
+        logging.error(f"Error fetching summary chart data: {e}")
+        return jsonify(error=str(e)), 500
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     app.run(host='127.0.0.1', port=5000, debug=True)
