@@ -8,8 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const columns = [
   { field: '_id', headerName: 'ID', width: 150 },
   { field: 'Department', headerName: 'Department', width: 230 },
-  { field: 'Original_Gender', headerName: 'Gender', width: 130 },
-  { field: 'Original_Mode', headerName: 'Mode', width: 130 },
+  { field: 'Gender', headerName: 'Gender', width: 130 },
+  { field: 'Mode', headerName: 'Mode', width: 130 },
   { field: 'GPA', headerName: 'GPA', width: 100 },
   { field: 'Prediction', headerName: 'Prediction', width: 200 }
 ];

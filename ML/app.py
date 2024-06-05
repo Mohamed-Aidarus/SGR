@@ -67,6 +67,10 @@ def predict():
         # Determine the prediction labels
         input_data['Prediction'] = ["Will Graduate" if pred == 1 else "Dropout" for pred in predictions]
 
+        # Revert Gender and Mode to original values before saving to MongoDB
+        input_data['Gender'] = input_data['Gender'].replace({1: 'Male', 0: 'Female'})
+        input_data['Mode'] = input_data['Mode'].replace({1: 'Parttime', 0: 'Fulltime'})
+
         # Store results in MongoDB
         result = input_data.to_dict(orient='records')
         predictions_collection.insert_many(result)
